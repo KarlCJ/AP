@@ -1,1 +1,191 @@
-Prinf("Hans");
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+	char name[20];
+	int anzahl;
+}Artikel;
+int add_art(Artikel lager[],const int len)
+{
+
+	int comp, i, j, useless, comp2, done = 0, tempzahl,voll=0;
+	char zero[20] = { '\0' }, tempname[20];
+	printf("name und anzahl eingeben und jeweils mit Enter bestaetigen\n");
+	useless = scanf("%s", &tempname);
+	useless = scanf("%i", &tempzahl);
+
+
+	for (i = 0; i < 2 && done != 1; i++)
+	{
+
+		for (j = 0; j < len && done != 1; j++)
+		{
+			comp = strcmp(lager[j].name, tempname);
+			if (comp == 0)								/* 0 heißt es ist dasselbe */
+			{
+				lager[j].anzahl = lager[j].anzahl + tempzahl;
+				printf("%s gab es schon im Lagerplatz %i die Anzahl wurde von %i auf %i erhöht\n", tempname, j, lager[j].anzahl - tempzahl, lager[j].anzahl);
+				done = 1;
+			}
+			comp2 = strcmp(lager[j].name, zero);
+			if (comp2 == 0 && i == 1 && done != 1)				/* bevor das ausgeführt wird musste mit der oberen if überprüft werden ob es das element schon gibt*/
+			{
+				strcpy(lager[j].name, tempname);
+				lager[j].anzahl = tempzahl;
+				printf("%s gab es noch nicht im Lager, es wurde in Lagerplatz: %i abgespeichert\n", tempname, j);
+				done = 1;
+
+			}
+			if(lager[len-1].name[0] != '\0')						/*2 auf len-1 setzen in vim*/
+			{ voll = 1; }
+		}
+
+	}	
+	return voll;
+}	
+void suche_art(Artikel lager[],const int len)
+
+{
+	char tempname[20];
+	int check=1,nix;
+	while (check == 1)
+	{		int ifcheck = 0;
+
+	printf("Nach welchen Artikel wollen sie suchen?\n");
+	nix = scanf("%s", tempname);
+		for (int u = 0; u < len&&ifcheck==0; u++)
+		{
+
+			if (0 == strcmp(lager[u].name, tempname) && lager[u].anzahl >= 1)
+			{
+				printf("%s wurde gefunden, es sind noch %i stueck auf Lager\n", lager[u].name, lager[u].anzahl);
+				ifcheck = 1;
+			}
+			if (0 == strcmp(lager[u].name, tempname) && lager[u].anzahl < 1)
+			{
+				printf("Fuer %s sind keine Lagerbestaende mehr da!\n",lager[u].name);
+				ifcheck = 1;
+			}
+		}
+		if(ifcheck==0)
+		{
+		printf("Ihre Eingabe: %s Exixstiert nicht im Lager oder wurde falsch geschrieben\n", tempname);
+		}
+		printf("Wollen sie nach einem weiteren Artikel suchen?\n1 - Ja\n0 - Nein\n");
+		nix = scanf("%i", &check);
+	}
+}
+void tabelle_ausg(Artikel lager[], const int len)
+
+{
+	printf("\n");
+	for (int i = 0; i < len; i++)
+	{
+		if (lager[i].name[0] != '\0')
+		{
+			printf(" %20s \t %10i\n", lager[i].name, lager[i].anzahl);
+		}
+	}
+	printf("\n");
+}
+void art_entnehmen(Artikel lager[], const int len)
+{
+	char tempname[15];
+	int check = 1, nix,lp,tempananzahl;					/*lp = Lagerplatz um nach der prüfung den wert zu umschreiben*/
+	while (check == 1)
+	{
+		int ifcheck = 0,lagerleer=0,lpr=0;				/*lpr = überprüfen ob überhaupt ein lagerplkatz gespeiechert wurde sonnst crash in zeile 126 und 131*/
+
+		printf("Von welchen Artikel wollen sie etwas entnehmen?\n");
+		nix = scanf("%s", tempname);
+		for (int u = 0; u < len && ifcheck == 0; u++)
+		{
+
+			if (0 == strcmp(lager[u].name, tempname) && lager[u].anzahl >= 1)
+			{
+				printf("%s wurde gefunden, es sind noch %i stueck auf Lager\n", lager[u].name, lager[u].anzahl);
+				ifcheck = 1;
+				lp = u; lpr = 1;
+			}
+			if (0 == strcmp(lager[u].name, tempname) && lager[u].anzahl < 1)
+			{
+				printf("Fuer %s sind keine Lagerbestaende mehr da, deshalb können sie nichts entnehmen\n", lager[u].name);
+				ifcheck = 1;
+				lagerleer = 1;
+			}
+		}
+		if (ifcheck == 0)
+		{
+			printf("Ihre Eingabe: %s Exixstiert nicht im Lager oder wurde falsch geschrieben\n", tempname);
+		}
+		if (lagerleer == 0 && ifcheck == 1)
+		{
+			printf("Wie viele wollen sie entnehmen?\n");
+			nix = scanf("%i", &tempananzahl);
+		}
+		if (lpr == 1 && tempananzahl > lager[lp].anzahl)
+		{
+			printf("Sie haben versucht %i vom bestand %i von %s zu entnehmen, das Lager darf nicht ueberzogen werden", tempananzahl, lager[lp].anzahl, lager[lp].name);
+		}
+		if (lpr==1 && tempananzahl <= lager[lp].anzahl)
+		{
+			lager[lp].anzahl -= tempananzahl;
+			printf("\nVon %s wurden %i entnommen\nAktualisierte Anzahl im Lager:%i\n\n",lager[lp].name,tempananzahl,lager[lp].anzahl);
+		}
+		
+
+		printf("Wollen sie nach einem weiteren Artikel suchen?\n1 - Ja\n0 - Nein\n");
+		nix = scanf("%i", &check);
+	}
+}
+int main()
+{
+	const int len = 3; /*Bei Anpassungen von len bitte auch Lager[] entsprechend anpassen*/
+	int test = 0;
+	Artikel Lager[3] = { '\0' };
+	int tt, ttt, mehradd,lagervoll=0;
+
+	do {
+		printf("Was wollen sie tun?\n\n1 - Artikel Hinzufuegen\n2 - Artikel entnehmen\n3 - Eintrag suchen\n4 - Lager als Tabelle ausgeben\n5 - Beenden\n\n");
+		ttt = scanf("%i", &tt);
+
+		switch (tt)
+		{
+		case 1:
+			mehradd = 1;
+			
+			while (mehradd != 0 && lagervoll != 1)
+			{
+				lagervoll= add_art(Lager,len);
+				if (lagervoll != 1)
+				{
+					printf("Noch einen artikel hinzufuegen?\n\n1 - Ja\n0 - Nein\n");
+					ttt = scanf("%i", &mehradd);
+				}
+				
+			}
+			if (lagervoll == 1)
+			{
+				printf("\nLager Voll!\n\n");
+			}
+			break;
+		case 2: art_entnehmen(Lager,len); break;
+
+		case 3:suche_art(Lager, len); break;
+
+		case 4:tabelle_ausg(Lager, len);break;
+
+		case 5:break;
+		
+		default:printf("\nFalsche Eingabe\n\n"); break;
+		}
+	} while (tt != 5);
+	
+
+	
+
+
+
+}
