@@ -1,0 +1,26 @@
+public class App {
+    public static void main(String[] args) {
+        Queue taxistand = new Queue(0);
+        Taxi a = new Taxi("Hans Schmitz", "K-HS1584", 1);
+        Taxi b = new Taxi("Amar Cucek", "B-AC8912", 2);
+        Taxi c = new Taxi("Fritz Wurst", "K-FW4855", 3);
+        Taxi d = new Taxi("Kai Uwe", "K-KU7544", 4);
+        Taxi e = new Taxi("Tim Sucuk", "K-TS8662", 5);
+        Taxi f = new Taxi("Bob Drei", "K-BF8002", 6);
+
+        System.out.println("Ausgangssituation");
+        taxistand.clear();
+        taxistand.ausgeben();
+
+        taxistand.enqueue(a);
+        taxistand.enqueue(b);
+        taxistand.enqueue(c);
+        taxistand.enqueue(d);
+        taxistand.enqueue(e);
+        taxistand.enqueue(f);
+
+        taxistand.dequeue();
+        taxistand.ausgeben();
+        System.out.println("\nTaxistand\n1 2 3 4 5");
+    }
+}
