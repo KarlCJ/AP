@@ -1,0 +1,108 @@
+public class Queue {
+    private Taxi[] arr;
+    private int nextfree;
+
+    public Queue(int nextfree) {
+        this.nextfree = nextfree;
+        arr = new Taxi[5];
+    }
+
+    /**
+     * Taxi x wird in die Queue bzw Warteschlange auf den nächsten freien Platz hinzugefügt falls die queue nicht voll ist
+     * Falls die queue voll ist wird das Taxi x nicht hinzugefügt und eine entsprechende Meldung ausgegeben
+     */
+
+    public void enqueue(Taxi x) {
+        if (!is_full()) {
+            arr[nextfree] = x;
+            nextfree = nextfree + 1;
+            System.out.println("Das Taxi: " + x.getnummer() + " " + x.getnamefahrer() + " " + x.getkennzeichen() + " fährt auf Platz " + nextfree);
+        } else {
+            System.out.println("Queue is full\nTaxi: " + x.getnummer() + " " + x.getnamefahrer() + " " + x.getkennzeichen() + " was not added to queue");
+        }
+
+    }
+
+    /**
+     * Falls die Queue bzw Warteschlange nicht leer ist, wird das forderste Taxi entfernt.
+     * Dazu rutschen alle Taxis einen Platz nach vorne und der letzte Platz wird frei gemacht
+     * falls die Queue leer ist wird eine entsprechende Meldung ausgegeben
+     */
+    public void dequeue() {
+        if (!is_empty()) {
+            Taxi x = arr[0];
+            for (int i = 0; i < arr.length - 1; i++) {
+                arr[i] = arr[i + 1];
+            }
+            nextfree = nextfree - 1;
+            arr[nextfree] = null;
+            System.out.println(x.getnamefahrer() + " " + x.getkennzeichen() + " " + x.getnummer() + " Successfully left the queue");
+        } else {
+            System.out.println("Queue is empty");
+        }
+    }
+
+    /**
+     * gibt aus ob die queue voll ist
+     * @return = true => queue ist voll
+     */
+
+    public boolean is_full() {
+        if (nextfree >= arr.length) {
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * gibt aus ob die queue leer ist
+     * @return = true => queue ist leer
+     */
+
+    public boolean is_empty() {
+        if (arr[0] == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
+     * falls andere Klassen auf private parameter zugriff brauchen
+     */
+    public Taxi[] getArr() {
+        return arr;
+    }
+
+    public int getNextFree() {
+        return nextfree;
+    }
+    /**
+     * Gibt die gesammte Queue bzw den Taxistand aus.
+     * Falls ein Platz nicht besetzt ist wird statdessen "frei" ausgegeben
+     */
+    public void ausgeben() {
+        System.out.println("\nTaxistand");
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == null) {
+                System.out.print("frei\t");
+
+            } else {
+                System.out.println("Taxi: " + arr[i].getnummer() + " " + arr[i].getnamefahrer() + " " + arr[i].getkennzeichen() + " Steht auf Platz: " + (i + 1));
+            }
+        }
+        System.out.println("\n");
+    }
+    /**
+     * setzt die gesammte Queue auf null
+     */
+    public void clear() {
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = null;
+        }
+        System.out.println("Alle " + arr.length + " Plätze wurden geleert\n");
+    }
+
+
+}
